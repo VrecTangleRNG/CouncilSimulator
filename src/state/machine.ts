@@ -40,15 +40,15 @@ export class StateMachine
 		// Push state
 		if (stateDecider.type === "push" || stateDecider.type === "replace")
 		{
-			stateDecider.state.enter();
-			this.states.push(stateDecider.state);
-
 			// Replace state
 			if (stateDecider.type === "replace")
 			{
 				this.states[runningStateLength - 1].exit();
 				this.states.pop();
 			}
+
+			stateDecider.state.enter();
+			this.states.push(stateDecider.state);
 		}
 
 		// Pop state
