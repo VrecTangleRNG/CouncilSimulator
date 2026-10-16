@@ -15,6 +15,7 @@ async function main(): Promise<void>
 		width: 640,
 		height: 960,
 		backgroundColor: 0x4fb8c9,
+		roundPixels: true,
 	});
 	document.body.appendChild(app.canvas);
 	app.stage.sortableChildren = true;

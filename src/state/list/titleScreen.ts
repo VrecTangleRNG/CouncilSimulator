@@ -1,24 +1,24 @@
 import { Application, Container, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
+import { LevelSelectionState } from "./levelSelect";
 
 export class TitleScreenState implements State
 {
 	name = "titleScreen";
 	container = new Container();
-
-	private S_WIDTH: number;
-	private S_HEIGHT: number;
+	app: Application;
 
 	private title: Sprite;
 	private playBtn: Sprite;
 	private quitBtn: Sprite;
 
+	private isChangeToLevel: boolean;
+
 	constructor(app: Application)
 	{
+		this.app = app;
 		app.stage.addChild(this.container);
-		this.S_WIDTH = app.screen.width;
-		this.S_HEIGHT = app.screen.height;
 
 		this.title = Sprite.from("title");
 		this.playBtn = Sprite.from("playBtn");
@@ -29,30 +29,53 @@ export class TitleScreenState implements State
 			this.playBtn,
 			this.quitBtn
 		);
+		
+		this.isChangeToLevel = false;
 	}
 
 	public enter()
 	{
-		let titleMargin = (this.S_WIDTH - this.title.width) / 2;
+		let titleMargin = (this.app.screen.width - this.title.width) / 2;
 		this.title.position.set(titleMargin);
 
-		this.quitBtn.x = (this.S_WIDTH - this.quitBtn.width) / 2;
-		this.quitBtn.y = this.S_HEIGHT - this.quitBtn.height - titleMargin;
+		this.quitBtn.x = (this.app.screen.width - this.quitBtn.width) / 2;
+		this.quitBtn.y = this.app.screen.height - this.quitBtn.height - titleMargin;
+		this.quitBtn.eventMode = "static";
+		this.quitBtn.cursor = "pointer";
+		this.quitBtn.on
+		(
+			"pointertap", () =>
+			{
+				// TODO
+			}
+		);
 		
 		this.playBtn.x = this.quitBtn.x;
 		this.playBtn.y = this.quitBtn.y - this.playBtn.height - titleMargin / 2;
+		this.playBtn.eventMode = "static";
+		this.playBtn.cursor = "pointer";
+		this.playBtn.on
+		(
+			"pointertap", () => { this.isChangeToLevel = true; }
+		);
 	}
 
 	public update(ticker: Ticker): StateTransition
 	{
+		if (this.isChangeToLevel)
+		{
+			return { type: "replace", state: new LevelSelectionState(this.app) };
+		}
 		return { type: "stay" };
 	}
 
 	public pause(ticker: Ticker)
 	{
+		return;
 	}
 
 	public exit(): void
 	{
+		this.app.stage.removeChild(this.container);
 	}
 }
