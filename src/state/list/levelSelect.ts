@@ -25,6 +25,7 @@ export class LevelSelectionState implements State
 	private checkmarks: Sprite[];
 	private isContinue: boolean;
 	private isBack: boolean;
+	private addedCards: number[];
 
 	constructor(app: Application)
 	{
@@ -51,6 +52,7 @@ export class LevelSelectionState implements State
 			},
 		});
 
+		this.addedCards = [];
 		this.isContinue = false;
 		this.isBack = false;
 
@@ -94,6 +96,8 @@ export class LevelSelectionState implements State
 
 	public enter()
 	{
+		this.container.sortableChildren = true;
+
 		this.policyHeader.x = (this.app.screen.width - this.policyHeader.width) / 2;
 		this.policyHeader.y = this.policyHeader.x
 
@@ -106,7 +110,7 @@ export class LevelSelectionState implements State
 		this.backBtn.cursor = "pointer";
 		this.backBtn.on
 		(
-			"pointertap", () => { this.isBack = true; }
+			"pointerdown", () => { this.isBack = true; }
 		);
 
 		this.randBtn.x = this.app.screen.width - this.randBtn.width - this.policyHeader.x;
@@ -115,23 +119,73 @@ export class LevelSelectionState implements State
 		this.randBtn.cursor = "pointer";
 		this.randBtn.on
 		(
-			"pointertap", () =>
+			"pointerdown", () =>
 			{
 				this.cards.forEach
 				(
-					(card) => { card.visible = false; }
+					(card) =>
+					{
+						card.zIndex = 0;
+						card.visible = false;
+						card.removeAllListeners("pointerdown");
+					}
 				);
 				this.randomizeCards();
 			}
 		);
 
+		this.nextBtn.visible = false;
 		this.nextBtn.x = this.app.screen.width / 2 - this.nextBtn.width / 2;
 		this.nextBtn.y = this.backBtn.y;
 		this.nextBtn.eventMode = "static";
 		this.nextBtn.cursor = "pointer";
 		this.nextBtn.on
 		(
-			"pointertap", () => { this.isContinue = true; }
+			"changedcards", () =>
+			{
+				if (this.addedCards.length > 0)
+				{
+					this.nextBtn.visible = true;
+					this.nextBtn.on
+					(
+						"pointerdown",  () =>
+						{
+							this.isContinue = true;
+						}
+					);
+
+					switch (this.addedCards.length)
+					{
+						case 1:
+						{
+							this.easy.visible = true;
+							this.medium.visible = this.hard.visible = this.wni.visible = false;
+						} break;
+						case 2:
+						{
+							this.medium.visible = true;
+							this.easy.visible = this.hard.visible = this.wni.visible = false;
+						} break;
+						case 3:
+						{
+							this.hard.visible = true;
+							this.medium.visible = this.easy.visible = this.wni.visible = false;
+						} break;
+						case 4:
+						{
+							this.wni.visible = true;
+							this.medium.visible = this.hard.visible = this.easy.visible = false;
+						} break;
+					}
+				}
+				else
+				{
+					this.nextBtn.visible = false;
+					this.nextBtn.removeAllListeners("pointerdown");
+					this.easy.visible = this.medium.visible = false;
+					this.hard.visible = this.wni.visible = false;
+				}
+			}
 		);
 
 		this.easy.visible = false;
@@ -147,12 +201,16 @@ export class LevelSelectionState implements State
 		this.wni.visible = false;
 		this.wni.position = this.easy.position;
 
-		for (let i = 0; i < this.cards.length; i++)
-		{
-			this.cards[i].visible = false;
-			this.cards[i].eventMode = "static";
-			this.cards[i].cursor = "pointer";
-		}
+		this.cards.forEach
+		(
+			(sprite) =>
+			{
+				sprite.zIndex = 0;
+				sprite.visible = false;
+				sprite.eventMode = "static";
+				sprite.cursor = "pointer";
+			}
+		);
 
 		let cardsMargin = (this.app.screen.width - this.policyHeader.x) / 2 - this.cards[0].width;
 		this.displayPos =
@@ -179,6 +237,7 @@ export class LevelSelectionState implements State
 		(
 			(sprite, index) =>
 			{
+				sprite.zIndex = 2;
 				sprite.position = this.displayPos[index];
 				sprite.visible = false;
 			}
@@ -219,8 +278,25 @@ export class LevelSelectionState implements State
 				randomIndex = Math.floor(Math.random() * 7.9);
 			}
 			while (this.cards[randomIndex].visible);
+			this.cards[randomIndex].zIndex = 1;
 			this.cards[randomIndex].visible = true;
 			this.cards[randomIndex].position = this.displayPos[i];
+			this.cards[randomIndex].on
+			(
+				"pointerdown", () =>
+				{
+					this.checkmarks[i].visible = !this.checkmarks[i].visible;
+					if (this.checkmarks[i].visible)
+					{
+						this.addedCards.push(randomIndex);
+					}
+					else
+					{
+						this.addedCards.splice(this.addedCards.indexOf(randomIndex), 1);
+					}
+					this.nextBtn.emit("changedcards");
+				}
+			);
 		}
 	}
 }
