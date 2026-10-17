@@ -27,7 +27,18 @@ async function main(): Promise<void>
 	(
 		(ticker) =>
 		{
-			stateMachine.run(ticker);
+			if (!stateMachine.run(ticker))
+			{
+				app.stop();
+				app.destroy
+				(
+					true,
+					{
+						children: true,
+						texture: true
+					},
+				);
+			}
 		}
 	);
 }

@@ -12,8 +12,8 @@ export class TitleScreenState implements State
 	private title: Sprite;
 	private playBtn: Sprite;
 	private quitBtn: Sprite;
-
 	private isChangeToLevel: boolean;
+	private isQuit: boolean;
 
 	constructor(app: Application)
 	{
@@ -31,6 +31,7 @@ export class TitleScreenState implements State
 		);
 		
 		this.isChangeToLevel = false;
+		this.isQuit = false;
 	}
 
 	public enter()
@@ -44,19 +45,16 @@ export class TitleScreenState implements State
 		this.quitBtn.cursor = "pointer";
 		this.quitBtn.on
 		(
-			"pointertap", () =>
-			{
-				// TODO
-			}
+			"pointerdown", () => { this.isQuit = true; }
 		);
-		
+
 		this.playBtn.x = this.quitBtn.x;
 		this.playBtn.y = this.quitBtn.y - this.playBtn.height - titleMargin / 2;
 		this.playBtn.eventMode = "static";
 		this.playBtn.cursor = "pointer";
 		this.playBtn.on
 		(
-			"pointertap", () => { this.isChangeToLevel = true; }
+			"pointerdown", () => { this.isChangeToLevel = true; }
 		);
 	}
 
@@ -65,6 +63,10 @@ export class TitleScreenState implements State
 		if (this.isChangeToLevel)
 		{
 			return { type: "replace", state: new LevelSelectionState(this.app) };
+		}
+		if (this.isQuit)
+		{
+			return { type: "pop" };
 		}
 		return { type: "stay" };
 	}

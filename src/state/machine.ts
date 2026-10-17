@@ -25,7 +25,7 @@ export class StateMachine
 		this.states.push(initialState);
 	}
 
-	run(ticker: Ticker)
+	run(ticker: Ticker): boolean
 	{
 		// Update head
 		let runningStateLength = this.states.length;
@@ -58,6 +58,11 @@ export class StateMachine
 			this.states.pop();
 		}
 
-		// TODO: quit the game when the stack is empty
+		// Quit state machine
+		if (this.states.length <= 0)
+		{
+			return false;
+		}
+		return true;
 	}
 }
