@@ -6,7 +6,7 @@ import { LevelSelectionState } from "./levelSelect";
 export class TitleScreenState implements State
 {
 	name = "titleScreen";
-	container = new Container();
+	container: Container;
 	app: Application;
 
 	private title: Sprite;
@@ -18,6 +18,7 @@ export class TitleScreenState implements State
 	constructor(app: Application)
 	{
 		this.app = app;
+		this.container = new Container();
 		app.stage.addChild(this.container);
 
 		this.title = Sprite.from("title");

@@ -32,6 +32,17 @@ export async function load()
 		{ alias: "smallBackBtn", src: "assets/textures/smallBackBtn.png"},
 		{ alias: "smallNextBtn", src: "assets/textures/smallNextBtn.png"},
 		{ alias: "smallRandBtn", src: "assets/textures/smallRandBtn.png"},
+		{ alias: "policiesBtn", src: "assets/textures/policiesBtn.png"},
+		{ alias: "incomeBtn", src: "assets/textures/incomeBtn.png"},
+
+		// HUD
+		{ alias: "playHUD", src: "assets/textures/playHUD.png"},
+		{ alias: "currencyIcon", src: "assets/textures/currencyIcon.png"},
+		{ alias: "timeIcon", src: "assets/textures/timeIcon.png"},
+		{ alias: "trustPointIcon", src: "assets/textures/trustPointIcon.png"},
+		{ alias: "textbox", src: "assets/textures/textbox.png"},
+		{ alias: "bar", src: "assets/textures/bar.png"},
+		{ alias: "pauseBtn", src: "assets/textures/pauseBtn.png"},
 
 		// Fonts
 		{

@@ -2,8 +2,8 @@ import { Application, Text, Container, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
 import { TitleScreenState } from "./titleScreen";
-import { Position } from "../../helper";
-
+import { Position, createCards } from "../../helper";
+import { GameplayState } from "./gameplay";
 
 export class LevelSelectionState implements State
 {
@@ -52,25 +52,17 @@ export class LevelSelectionState implements State
 			},
 		});
 
-		this.addedCards = [];
-		this.isContinue = false;
-		this.isBack = false;
-
-		this.cards = [];
-		this.cards[0] = Sprite.from("infrastructureCard");
-		this.cards[1] = Sprite.from("educationCard");
-		this.cards[2] = Sprite.from("safetyCard");
-		this.cards[3] = Sprite.from("servicesCard");
-		this.cards[4] = Sprite.from("environmentCard");
-		this.cards[5] = Sprite.from("legislativesCard");
-		this.cards[6] = Sprite.from("financeCard");
-		this.cards[7] = Sprite.from("socialsCard");
-		this.displayPos = [];
+		this.cards = createCards();
 		this.checkmarks = [];
 		for (let i = 0; i < 4; i++)
 		{
 			this.checkmarks[i] = Sprite.from("checkmark");
 		}
+
+		this.displayPos = [];
+		this.addedCards = [];
+		this.isContinue = false;
+		this.isBack = false;
 
 		this.container.addChild
 		(
@@ -254,13 +246,14 @@ export class LevelSelectionState implements State
 		}
 		if (this.isContinue)
 		{
-			// TODO: add state first
+			return { type: "replace", state: new GameplayState(this.app, this.addedCards) };
 		}
 		return { type: "stay" };
 	}
 
 	public pause(ticker: Ticker)
 	{
+		return;
 	}
 
 	public exit(): void
