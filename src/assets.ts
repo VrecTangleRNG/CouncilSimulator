@@ -9,6 +9,7 @@ export async function load()
 		{ alias: "title", src: "assets/textures/title.png"},
 		{ alias: "checkmark", src: "assets/textures/checkmark.png"},
 		{ alias: "line", src: "assets/textures/line.png"},
+		{ alias: "taskPoint", src: "assets/textures/taskPoint.png"},
 
 		// Difficulties
 		{ alias: "policyHeader", src: "assets/textures/diffSelectHeader.png"},
@@ -36,6 +37,7 @@ export async function load()
 		{ alias: "policiesBtn", src: "assets/textures/policiesBtn.png"},
 		{ alias: "incomeBtn", src: "assets/textures/incomeBtn.png"},
 		{ alias: "pauseBtn", src: "assets/textures/pauseBtn.png"},
+		{ alias: "allocateBtn", src: "assets/textures/allocateBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},

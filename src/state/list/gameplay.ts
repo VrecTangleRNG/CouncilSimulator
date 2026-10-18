@@ -156,13 +156,13 @@ export class GameplayState implements State
 		// State Transitions
 		if (currentGamePage.state === "policy")
 		{
-			this.policyBtn.tint = 0x444444;
+			this.policyBtn.tint = 0x888888;
 			this.incomeBtn.tint = 0xffffff;
 			return { type: "push", state: new PolicyState(this.app) };
 		}
 		else if (currentGamePage.state === "income")
 		{
-			this.incomeBtn.tint = 0x444444;
+			this.incomeBtn.tint = 0x888888;
 			this.policyBtn.tint = 0xffffff;
 			return { type: "push", state: new IncomeState(this.app) };
 		}
@@ -172,7 +172,7 @@ export class GameplayState implements State
 	public pause(ticker: Ticker)
 	{
 		// Update trust bar
-		this.trustMeter -= ticker.deltaMS / 1000;
+		this.trustMeter -= ticker.deltaMS / 750;
 		if (this.trustMeter <= 0) this.trustMeter = 0;
 		this.barFilled.scale.x = this.trustMeter / 100;
 

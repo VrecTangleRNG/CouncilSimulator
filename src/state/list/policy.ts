@@ -18,7 +18,11 @@ export class PolicyState implements State
 	private lines: Sprite[];
 	private headerStyle: TextStyle;
 	private headerTexts: Text[];
+	private tasks: Sprite[];
+	private allocateBtns: Sprite[][];
 
+	private cardsCount: number;
+	private periodsCount: number;
 	private isDragging: boolean;
 	private isDoneMove: boolean;
 	private startPoint: Position;
@@ -30,39 +34,68 @@ export class PolicyState implements State
 		this.container = new Container();
 		app.stage.addChild(this.container);
 
-		this.lines = [];
-		this.lines[0] = Sprite.from("line");
-		this.headerStyle = new TextStyle();
-		this.headerTexts = [];
-		this.headerTexts[0] = new Text();
+		// Object creations
 		this.cards = [];
 		this.cards[0] = [];
-		gameData.cards[0].forEach
+		this.lines = [];
+		this.headerTexts = [];
+		this.allocateBtns = [];
+		this.allocateBtns[0] = [];
+		this.cardsCount = 0;
+		this.periodsCount = 0;
+		gameData.cards.forEach
 		(
-			(number, index) => { this.cards[0][index] = createSingleCard(number); }
+			(n1, i) =>
+			{
+				this.periodsCount++;
+				this.lines[i] = Sprite.from("line");
+				this.headerTexts[i] = new Text();
+				n1.forEach
+				(
+					(n2, j) =>
+					{
+						this.cardsCount++;
+						this.cards[i][j] = createSingleCard(n2);
+						this.allocateBtns[i][j] = Sprite.from("allocateBtn");
+					}
+				);
+			}
 		);
+		this.tasks = [];
+		for (let i = 0; i < 4 * this.cards[0].length; i++)
+		{
+			this.tasks[i] = Sprite.from("taskPoint");
+		}
+		this.headerStyle = new TextStyle();
 
+		// Back-end variables
 		this.isDragging = false;
 		this.isDoneMove = false;
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
 
-		this.container.addChild
+		// Add objects to stage
+		this.cards.forEach
 		(
-			this.lines[0],
-			this.headerTexts[0],
+			(sprites, i) =>
+			{
+				sprites.forEach
+				(
+					(sprite, j) =>
+					{
+						this.container.addChild(sprite, this.allocateBtns[i][j]);
+					}
+				)
+			}
 		);
-		this.cards[0].forEach
-		(
-			(sprite) => { this.container.addChild(sprite); }
-		);
+		this.lines.forEach( (sprite) => { this.container.addChild(sprite); } );
+		this.headerTexts.forEach( (sprite) => { this.container.addChild(sprite); } );
+		this.tasks.forEach( (sprite) => { this.container.addChild(sprite); } );
 	}
 
 	public enter()
 	{
 		const verticalMargin = 10;
-		console.log("hello");
-
 		this.app.stage.on
 		(
 			"pointerdown", (event) =>
@@ -100,25 +133,56 @@ export class PolicyState implements State
 		this.headerStyle.fontSize = 28;
 		this.headerStyle.fill = 0x000000;
 
-		this.lines[0].x = (this.app.screen.width - this.lines[0].width) / 2;
-		this.headerTexts[0].style = this.headerStyle;
-		this.headerTexts[0].text = "1st Year";
-		this.headerTexts[0].x = this.lines[0].x;
-		this.headerTexts[0].y = 152 + verticalMargin;
-		this.lines[0].y = this.headerTexts[0].y + this.headerTexts[0].height + verticalMargin;
-
-		this.cards[0].forEach
+		let cardsIndex = 0;
+		this.cards.forEach
 		(
-			(sprite, index) =>
+			(sprites, i) =>
 			{
-				sprite.x = this.lines[0].x;
-				sprite.y = this.lines[0].y + verticalMargin +
-					(verticalMargin * (index + 1)) +
-					(this.cards[0][0].height * index);
+				this.lines[i].x = (this.app.screen.width - this.lines[0].width) / 2;
+				this.headerTexts[i].style = this.headerStyle;
+				this.headerTexts[i].text = "1st Year";
+				this.headerTexts[i].x = this.lines[0].x;
+				this.headerTexts[i].y = 152 + verticalMargin;
+
+				this.lines[i].y = this.headerTexts[0].y +
+					this.headerTexts[0].height + verticalMargin;
+				this.lines[0].x = (this.app.screen.width - this.lines[0].width) / 2;
+
+				sprites.forEach
+				(
+					(sprite, j) =>
+					{
+						sprite.x = this.lines[0].x;
+						sprite.y = this.lines[0].y + verticalMargin +
+							(verticalMargin * (j + 1)) +
+							(this.cards[0][0].height * j);
+
+						this.allocateBtns[i][j].x = this.lines[0].x +
+							this.lines[0].width - this.allocateBtns[i][j].width;
+						this.allocateBtns[i][j].y = sprite.y +
+							sprite.height - this.allocateBtns[i][j].height;
+						this.allocateBtns[i][j].eventMode = "static";
+						this.allocateBtns[i][j].cursor = "pointer";
+						this.allocateBtns[i][j].on
+						(
+							"pointerdown", (event) =>
+							{
+								event.stopPropagation();
+							}
+						);
+
+						for (let k = 0; k < 4; k++)
+						{
+							this.tasks[cardsIndex * 4 + k].x = this.cards[0][0].x +
+								this.cards[0][0].width + verticalMargin;
+							this.tasks[cardsIndex * 4 + k].y = this.cards[i][j].y +
+								(this.tasks[0].height + verticalMargin * 2) * k;
+						}
+						cardsIndex++;
+					}
+				);
 			}
 		);
-
-		this.lines[0].x = (this.app.screen.width - this.lines[0].width) / 2;
 	}
 
 	public update(ticker: Ticker): StateTransition
