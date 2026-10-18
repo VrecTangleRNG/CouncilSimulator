@@ -1,4 +1,4 @@
-import { Application, BitmapText, Container, Graphics, Sprite, Ticker } from "pixi.js";
+import { Application, BitmapText, Container, Graphics, Rectangle, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
 import { PolicyState } from "./policy";
@@ -78,6 +78,13 @@ export class GameplayState implements State
 
 	public enter()
 	{
+		this.app.stage.eventMode = "static";
+		this.app.stage.hitArea = new Rectangle
+		(
+			0, this.playHUD.height,
+			this.app.screen.width, this.app.screen.height - this.playHUD.height
+		);
+
 		this.container.zIndex = 1;
 
 		this.currencyIcon.x = (this.app.screen.width - this.currencyIcon.width -
@@ -188,6 +195,7 @@ export class GameplayState implements State
 
 	public exit(): void
 	{
+		this.app.stage.removeAllListeners("pointermove");
 		this.app.stage.removeChild(this.container);
 	}
 }
