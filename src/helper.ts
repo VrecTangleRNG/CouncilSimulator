@@ -15,3 +15,20 @@ export function createCards(): Sprite[]
 	cards[7] = Sprite.from("socialsCard");
 	return cards;
 }
+
+export function createSingleCard(id: number): Sprite
+{
+	switch (id)
+	{
+		case 0: return Sprite.from("infrastructureCard");
+		case 1: return Sprite.from("educationCard");
+		case 2: return Sprite.from("safetyCard");
+		case 3: return Sprite.from("servicesCard");
+		case 4: return Sprite.from("environmentCard");
+		case 5: return Sprite.from("legislativesCard");
+		case 6: return Sprite.from("financeCard");
+		case 7: return Sprite.from("socialsCard");
+	}
+
+	return new Sprite();
+}

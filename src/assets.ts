@@ -8,6 +8,7 @@ export async function load()
 		// Textures
 		{ alias: "title", src: "assets/textures/title.png"},
 		{ alias: "checkmark", src: "assets/textures/checkmark.png"},
+		{ alias: "line", src: "assets/textures/line.png"},
 
 		// Difficulties
 		{ alias: "policyHeader", src: "assets/textures/diffSelectHeader.png"},
@@ -34,6 +35,7 @@ export async function load()
 		{ alias: "smallRandBtn", src: "assets/textures/smallRandBtn.png"},
 		{ alias: "policiesBtn", src: "assets/textures/policiesBtn.png"},
 		{ alias: "incomeBtn", src: "assets/textures/incomeBtn.png"},
+		{ alias: "pauseBtn", src: "assets/textures/pauseBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},
@@ -42,7 +44,12 @@ export async function load()
 		{ alias: "trustPointIcon", src: "assets/textures/trustPointIcon.png"},
 		{ alias: "textbox", src: "assets/textures/textbox.png"},
 		{ alias: "bar", src: "assets/textures/bar.png"},
-		{ alias: "pauseBtn", src: "assets/textures/pauseBtn.png"},
+
+		// Panels
+		{ alias: "confirmationPanel", src: "assets/textures/confirmationPanel.png"},
+		{ alias: "pausePanel", src: "assets/textures/pausePanel.png"},
+		{ alias: "settingsPanel", src: "assets/textures/settingsPanel.png"},
+		{ alias: "warningPanel", src: "assets/textures/warningPanel.png"},
 
 		// Fonts
 		{

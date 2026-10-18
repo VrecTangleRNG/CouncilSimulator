@@ -4,6 +4,7 @@ import { State, StateTransition } from "../machine";
 import { TitleScreenState } from "./titleScreen";
 import { Position, createCards } from "../../helper";
 import { GameplayState } from "./gameplay";
+import { gameData } from "../../global";
 
 export class LevelSelectionState implements State
 {
@@ -122,6 +123,12 @@ export class LevelSelectionState implements State
 						card.removeAllListeners("pointerdown");
 					}
 				);
+				this.checkmarks.forEach
+				(
+					(sprite) => { sprite.visible = false; }
+				);
+				this.addedCards = [];
+				this.nextBtn.emit("changedcards");
 				this.randomizeCards();
 			}
 		);
@@ -142,6 +149,7 @@ export class LevelSelectionState implements State
 					(
 						"pointerdown",  () =>
 						{
+							gameData.cards[0] = this.addedCards;
 							this.isContinue = true;
 						}
 					);
@@ -170,6 +178,7 @@ export class LevelSelectionState implements State
 						} break;
 					}
 				}
+
 				else
 				{
 					this.nextBtn.visible = false;
@@ -246,7 +255,7 @@ export class LevelSelectionState implements State
 		}
 		if (this.isContinue)
 		{
-			return { type: "replace", state: new GameplayState(this.app, this.addedCards) };
+			return { type: "replace", state: new GameplayState(this.app) };
 		}
 		return { type: "stay" };
 	}

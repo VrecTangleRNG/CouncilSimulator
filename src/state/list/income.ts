@@ -1,10 +1,11 @@
 import { Application, Container, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
+import { currentGamePage } from "../../global";
 
-export class GameplayState implements State
+export class IncomeState implements State
 {
-	name = "gameplay";
+	name = "income";
 	container = new Container();
 	app: Application;
 
@@ -20,6 +21,10 @@ export class GameplayState implements State
 
 	public update(ticker: Ticker): StateTransition
 	{
+		if (currentGamePage.state !== this.name)
+		{
+			return { type: "pop" };
+		}
 		return { type: "stay" };
 	}
 
