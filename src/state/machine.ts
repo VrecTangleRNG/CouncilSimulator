@@ -37,16 +37,21 @@ export class StateMachine
 			this.states[i].pause(ticker);
 		}
 
+		// DEBUG
+		if (stateDecider.type !== "stay")
+		{
+			console.log(this.states);
+		}
+
 		// Push state
 		if (stateDecider.type === "push" || stateDecider.type === "replace")
 		{
-			// Replace state
+			// And if possible, replace state
 			if (stateDecider.type === "replace")
 			{
 				this.states[runningStateLength - 1].exit();
 				this.states.pop();
 			}
-
 			stateDecider.state.enter();
 			this.states.push(stateDecider.state);
 		}

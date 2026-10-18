@@ -1,6 +1,10 @@
 import { Application, BitmapText, Container, Graphics, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
+import { PolicyState } from "./policy";
+import { IncomeState } from "./income";
+import { currentGamePage } from "../../global";
+
 export class GameplayState implements State
 {
 	name = "gameplay";
@@ -20,14 +24,13 @@ export class GameplayState implements State
 	private moneyText: BitmapText;
 	private timeText: BitmapText;
 
-	private policies: number[][];
 	private trustMeter: number;
 	private money: number;
 	private dayRate: number;
 	private daysPassed: number;
 	public incomes: number[];
 
-	constructor(app: Application, policies: number[])
+	constructor(app: Application)
 	{
 		this.app = app;
 		this.container = new Container();
@@ -48,14 +51,12 @@ export class GameplayState implements State
 		this.moneyText = new BitmapText();
 		this.timeText = new BitmapText();
 
-		this.policies = [];
-		this.policies[0] = policies;
 		this.money = 200.00;
 		this.incomes = [];
 		this.incomes[0] = 15;
 		this.dayRate = 0;
 		this.daysPassed = 0;
-		this.trustMeter = 100;
+		this.trustMeter = 50;
 
 		this.container.addChild
 		(
@@ -77,6 +78,8 @@ export class GameplayState implements State
 
 	public enter()
 	{
+		this.container.zIndex = 1;
+
 		this.currencyIcon.x = (this.app.screen.width - this.currencyIcon.width -
 			this.textboxes[0].width - this.trustIcon.width - this.bar.width) / 3;
 		this.currencyIcon.y = this.currencyIcon.x;
@@ -126,14 +129,40 @@ export class GameplayState implements State
 		this.policyBtn.y = this.app.screen.height - this.policyBtn.height - this.policyBtn.x;
 		this.policyBtn.eventMode = "static";
 		this.policyBtn.cursor = "pointer";
+		this.policyBtn.on
+		(
+			"pointerdown", () => { currentGamePage.state = "policy"; }
+		);
 
 		this.incomeBtn.x = this.policyBtn.width + this.policyBtn.x * 2;
 		this.incomeBtn.y = this.policyBtn.y;
 		this.incomeBtn.eventMode = "static";
 		this.incomeBtn.cursor = "pointer";
+		this.incomeBtn.on
+		(
+			"pointerdown", () => { currentGamePage.state = "income"; }
+		);
 	}
 
 	public update(ticker: Ticker): StateTransition
+	{
+		// State Transitions
+		if (currentGamePage.state === "policy")
+		{
+			this.policyBtn.tint = 0x444444;
+			this.incomeBtn.tint = 0xffffff;
+			return { type: "push", state: new PolicyState(this.app) };
+		}
+		else if (currentGamePage.state === "income")
+		{
+			this.incomeBtn.tint = 0x444444;
+			this.policyBtn.tint = 0xffffff;
+			return { type: "push", state: new IncomeState(this.app) };
+		}
+		return { type: "stay" };
+	}
+
+	public pause(ticker: Ticker)
 	{
 		// Update trust bar
 		this.trustMeter -= ticker.deltaMS / 1000;
@@ -154,11 +183,6 @@ export class GameplayState implements State
 			this.moneyText.text = "$" + this.money.toFixed(2) + "M";
 		}
 
-		return { type: "stay" };
-	}
-
-	public pause(ticker: Ticker)
-	{
 		return;
 	}
 
