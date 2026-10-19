@@ -1,6 +1,6 @@
 import
 {
-	Application, Container, FederatedPointerEvent, Sprite, Text, TextStyle, Ticker
+	Application, Container, Sprite, Text, TextStyle, Ticker
 }
 from "pixi.js";
 import { State, StateTransition } from "../machine";
