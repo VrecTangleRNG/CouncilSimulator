@@ -45,6 +45,8 @@ export async function load()
 		{ alias: "grayedYesBtn", src: "assets/textures/grayedYesBtn.png"},
 		{ alias: "noBtn", src: "assets/textures/noBtn.png"},
 		{ alias: "raiseTaxesBtn", src: "assets/textures/raiseTaxesBtn.png"},
+		{ alias: "smallContinueBtn", src: "assets/textures/smallContinueBtn.png"},
+		{ alias: "smallDownBtn", src: "assets/textures/smallDownBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},

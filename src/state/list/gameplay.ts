@@ -4,6 +4,7 @@ import { State, StateTransition } from "../machine";
 import { PolicyState } from "./policy";
 import { IncomeState } from "./income";
 import { currentGamePage, gameData } from "../../global";
+import { PausedState } from "./pause";
 
 export class GameplayState implements State
 {
@@ -24,6 +25,7 @@ export class GameplayState implements State
 	private moneyText: BitmapText;
 	private timeText: BitmapText;
 
+	private isPaused: boolean;
 	private dayRate: number;
 	private daysPassed: number;
 
@@ -48,6 +50,7 @@ export class GameplayState implements State
 		this.moneyText = new BitmapText();
 		this.timeText = new BitmapText();
 
+		this.isPaused = false;
 		this.dayRate = 0;
 		this.daysPassed = 0;
 
@@ -74,8 +77,8 @@ export class GameplayState implements State
 		this.app.stage.eventMode = "static";
 		this.app.stage.hitArea = new Rectangle
 		(
-			0, this.playHUD.height,
-			this.app.screen.width, this.app.screen.height - this.playHUD.height
+			0, this.playHUD.height / 2,
+			this.app.screen.width, this.app.screen.height - this.playHUD.height / 2
 		);
 
 		this.container.zIndex = 1;
@@ -124,6 +127,14 @@ export class GameplayState implements State
 		this.pauseBtn.y = this.timeIcon.y;
 		this.pauseBtn.eventMode = "static";
 		this.pauseBtn.cursor = "pointer";
+		this.pauseBtn.on
+		(
+			"pointerdown", (event) =>
+			{
+				event.stopPropagation();
+				this.isPaused = true;
+			}
+		);
 
 		this.policyBtn.x = (this.app.screen.width - this.policyBtn.width * 2) / 3;
 		this.policyBtn.y = this.app.screen.height - this.policyBtn.height - this.policyBtn.x;
@@ -151,19 +162,22 @@ export class GameplayState implements State
 		{
 			this.policyBtn.tint = 0x888888;
 			this.incomeBtn.tint = 0xffffff;
-			return { type: "push", state: new PolicyState(this.app) };
+			return { type: "push", state: new PolicyState(this.app, this.pauseBtn) };
 		}
 		else if (currentGamePage.state === "income")
 		{
 			this.incomeBtn.tint = 0x888888;
 			this.policyBtn.tint = 0xffffff;
-			return { type: "push", state: new IncomeState(this.app) };
+			return { type: "push", state: new IncomeState(this.app, this.pauseBtn) };
 		}
 		return { type: "stay" };
 	}
 
 	public pause(ticker: Ticker)
 	{
+		// TODO: find a way to unpause this
+		if (this.isPaused) return;
+
 		// Update trust bar
 		gameData.trust -= ticker.deltaMS / 750;
 		if (gameData.trust <= 0) gameData.trust = 0;

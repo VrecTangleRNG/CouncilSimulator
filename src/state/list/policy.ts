@@ -9,6 +9,7 @@ import { currentGamePage, gameData } from "../../global";
 import { Position } from "../../helper";
 import { CardItem } from "../../entities";
 import { ConfirmationState } from "./confirmation";
+import { PausedState } from "./pause";
 
 export class PolicyState implements State
 {
@@ -20,6 +21,7 @@ export class PolicyState implements State
 	private lines: Sprite[];
 	private headerStyle: TextStyle;
 	private headerTexts: Text[];
+	private pauseBtn: Sprite;
 
 	private isDragging: boolean;
 	private isDoneMove: boolean;
@@ -28,8 +30,9 @@ export class PolicyState implements State
 	private whichCardToOpenAllocate: CardItem;
 	private startPoint: Position;
 	private startContainer: Position;
+	private isPaused: boolean;
 
-	constructor(app: Application)
+	constructor(app: Application, pauseBtn: Sprite)
 	{
 		this.app = app;
 		this.container = new Container();
@@ -58,6 +61,7 @@ export class PolicyState implements State
 		);
 		this.headerStyle = new TextStyle();
 		this.whichCardToOpenAllocate = new CardItem(0, 0, 0);
+		this.pauseBtn = pauseBtn;
 
 		// Back-end variables
 		this.isDragging = false;
@@ -66,6 +70,7 @@ export class PolicyState implements State
 		this.canScrolling = true;
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
+		this.isPaused = false;
 
 		// Add objects to stage
 		this.lines.forEach( (sprite) => { this.container.addChild(sprite); } );
@@ -147,11 +152,21 @@ export class PolicyState implements State
 				);
 			}
 		);
+
+		this.pauseBtn.on
+		(
+			"pointerdown", () => { this.isPaused = true; }
+		);
 	}
 
 	public update(ticker: Ticker): StateTransition
 	{
 		this.canScrolling = true;
+		if (this.isPaused)
+		{
+			this.isPaused = false;
+			return { type: "push", state: new PausedState(this.app) };
+		}
 		if (currentGamePage.state !== this.name)
 		{
 			return { type: "pop" };

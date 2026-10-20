@@ -3,6 +3,7 @@ import { State, StateTransition } from "../machine";
 
 import { currentGamePage, gameData } from "../../global";
 import { ConfirmationState } from "./confirmation";
+import { PausedState } from "./pause";
 
 export class IncomeState implements State
 {
@@ -18,10 +19,12 @@ export class IncomeState implements State
 	private iconTexts: Text[];
 	private iconTextStyle: TextStyle;
 	private taxBtn: Sprite;
+	private pauseBtn: Sprite;
 
 	private isConfirm: boolean;
+	private isPaused: boolean;
 
-	constructor(app: Application)
+	constructor(app: Application, pauseBtn: Sprite)
 	{
 		this.app = app;
 		this.container = new Container();
@@ -41,7 +44,10 @@ export class IncomeState implements State
 
 		this.container.addChild(this.iconTexts[i]); }
 
+		this.pauseBtn = pauseBtn;
+
 		this.isConfirm = false;
+		this.isPaused = false;
 
 		this.container.addChild
 		(
@@ -92,6 +98,10 @@ export class IncomeState implements State
 
 		this.iconTextStyle = this.headerText.style;
 
+		this.pauseBtn.on
+		(
+			"pointerdown", () => { this.isPaused = true; }
+		);
 	}
 
 	public update(ticker: Ticker): StateTransition
@@ -125,6 +135,11 @@ export class IncomeState implements State
 		);	
 
 		// State transitions
+		if (this.isPaused)
+		{
+			this.isPaused = false;
+			return { type: "push", state: new PausedState(this.app) };
+		}
 		if (currentGamePage.state !== this.name)
 		{
 			return { type: "pop" };
