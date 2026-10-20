@@ -1,24 +1,28 @@
 import { BitmapText, Container, Sprite, TextStyle } from "pixi.js";
 import { createSingleCard } from "./helper";
+import { gameData } from "./global";
 
 export class CardItem
 {
 	private bullets: Sprite[];
 	private texts: BitmapText[];
 	private textStyle: TextStyle;
-	public progress: number;
 	public container: Container;
 	public card: Sprite;
 	public allocateBtn: Sprite;
 
-	constructor(id: number)
+	public period: number;
+	public id: number;
+
+	constructor(cardsId: number, period: number, id: number)
 	{
 		this.container = new Container();
-		this.card = createSingleCard(id);
+		this.card = createSingleCard(cardsId);
 		this.allocateBtn = Sprite.from("allocateBtn");
 		this.textStyle = new TextStyle();
 
-		this.progress = -1;
+		this.period = period;
+		this.id = id;
 
 		this.bullets = [];
 		this.texts = [];
@@ -42,11 +46,24 @@ export class CardItem
 		(
 			"progressed", () =>
 			{
-				this.bullets[this.progress].visible = false;
-				this.texts[this.progress].visible = false;
+				let progress = gameData.progress[this.period][this.id];
+				if (progress >= 0)
+				{
+					this.bullets.forEach
+					(
+						(sprite, index) =>
+						{
+							if (progress >= index)
+							{
+								sprite.visible = false;
+								this.texts[index].visible = false;
+							}
+						}
+					);
+				}
 				if (!this.bullets[3].visible)
 				{
-					this.progress = -1;
+					gameData.progress[this.period][this.id] = -1;
 					this.bullets.forEach
 					(
 						(sprite, index) =>

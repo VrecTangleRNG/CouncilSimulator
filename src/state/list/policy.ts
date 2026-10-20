@@ -24,6 +24,7 @@ export class PolicyState implements State
 	private isDragging: boolean;
 	private isDoneMove: boolean;
 	private isConfirm: boolean;
+	private canScrolling: boolean;
 	private whichCardToOpenAllocate: CardItem;
 	private startPoint: Position;
 	private startContainer: Position;
@@ -49,19 +50,20 @@ export class PolicyState implements State
 				(
 					(id, j) =>
 					{
-						this.cards[i][j] = new CardItem(id);
+						this.cards[i][j] = new CardItem(id, i, j);
 						this.container.addChild(this.cards[i][j].container);
 					}
 				);
 			}
 		);
 		this.headerStyle = new TextStyle();
-		this.whichCardToOpenAllocate = new CardItem(0);
+		this.whichCardToOpenAllocate = new CardItem(0, 0, 0);
 
 		// Back-end variables
 		this.isDragging = false;
 		this.isDoneMove = false;
 		this.isConfirm = false;
+		this.canScrolling = true;
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
 
@@ -78,7 +80,7 @@ export class PolicyState implements State
 		// Scrolling functionality
 		this.app.stage.on
 		(
-			"pointerdown", (event) =>
+			"pointerdown", () =>
 			{
 				if (!this.isDragging)
 				{
@@ -92,7 +94,7 @@ export class PolicyState implements State
 			"pointermove", (event) =>
 			{
 				this.isDoneMove = !this.isDoneMove;
-				if (this.isDragging && this.isDoneMove)
+				if (this.isDragging && this.isDoneMove && this.canScrolling)
 				{
 					this.container.y = this.startContainer.y +
 						(event.globalY - this.startPoint.y) * 2;
@@ -130,6 +132,7 @@ export class PolicyState implements State
 						card.container.x = this.lines[0].x;
 						card.container.y = this.lines[i].y + this.lines[i].height +
 							verticalMargin + (verticalMargin + card.card.height) * j;
+						card.container.emit("progressed");
 
 						card.allocateBtn.on
 						(
@@ -148,6 +151,7 @@ export class PolicyState implements State
 
 	public update(ticker: Ticker): StateTransition
 	{
+		this.canScrolling = true;
 		if (currentGamePage.state !== this.name)
 		{
 			return { type: "pop" };
@@ -165,6 +169,7 @@ export class PolicyState implements State
 
 	public pause(ticker: Ticker)
 	{
+		this.canScrolling = false;
 		return;
 	}
 

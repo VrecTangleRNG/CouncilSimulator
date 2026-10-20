@@ -1,7 +1,15 @@
-type GameData = { cards: number[][], incomes: number[], money: number, trust: number};
+type GameData =
+{
+	cards: number[][],
+	progress: number[][],
+	incomes: number[],
+	money: number,
+	trust: number
+};
 export let gameData: GameData =
 {
 	cards: [],
+	progress: [[]],
 	incomes: [15.50, 0, 0],
 	money: 200.00,
 	trust: 50,

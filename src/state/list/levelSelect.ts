@@ -150,6 +150,10 @@ export class LevelSelectionState implements State
 						"pointerdown",  () =>
 						{
 							gameData.cards[0] = this.addedCards;
+							gameData.cards[0].forEach
+							(
+								(id, index) => { gameData.progress[0][index] = -1; }
+							);
 							this.isContinue = true;
 						}
 					);

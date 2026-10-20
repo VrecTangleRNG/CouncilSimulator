@@ -81,7 +81,7 @@ export class ConfirmationState implements State
 				{
 					gameData.money -= 100;
 					gameData.trust += 8;
-					this.accessedCard.progress += 1;
+					gameData.progress[this.accessedCard.period][this.accessedCard.id] += 1;
 					this.accessedCard.container.emit("progressed");
 				}
 				else if (this.type === "add")
