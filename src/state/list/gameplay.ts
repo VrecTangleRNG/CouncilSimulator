@@ -26,7 +26,6 @@ export class GameplayState implements State
 
 	private dayRate: number;
 	private daysPassed: number;
-	public incomes: number[];
 
 	constructor(app: Application)
 	{
@@ -49,8 +48,6 @@ export class GameplayState implements State
 		this.moneyText = new BitmapText();
 		this.timeText = new BitmapText();
 
-		this.incomes = [];
-		this.incomes[0] = 15;
 		this.dayRate = 0;
 		this.daysPassed = 0;
 
@@ -177,7 +174,7 @@ export class GameplayState implements State
 		this.dayRate += ticker.deltaMS / 1500;
 		if (this.dayRate >= 1)
 		{
-			this.incomes.forEach
+			gameData.incomes.forEach
 			(
 				(n) => { gameData.money += n; }
 			);

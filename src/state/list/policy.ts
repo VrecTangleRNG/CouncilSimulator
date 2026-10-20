@@ -8,7 +8,7 @@ import { State, StateTransition } from "../machine";
 import { currentGamePage, gameData } from "../../global";
 import { Position } from "../../helper";
 import { CardItem } from "../../entities";
-import { AllocateState } from "./allocate";
+import { ConfirmationState } from "./confirmation";
 
 export class PolicyState implements State
 {
@@ -23,8 +23,7 @@ export class PolicyState implements State
 
 	private isDragging: boolean;
 	private isDoneMove: boolean;
-	private isOpeningAllocate: boolean;
-	private isPaused: boolean;
+	private isConfirm: boolean;
 	private whichCardToOpenAllocate: CardItem;
 	private startPoint: Position;
 	private startContainer: Position;
@@ -62,8 +61,7 @@ export class PolicyState implements State
 		// Back-end variables
 		this.isDragging = false;
 		this.isDoneMove = false;
-		this.isOpeningAllocate = false;
-		this.isPaused = false;
+		this.isConfirm = false;
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
 
@@ -110,7 +108,7 @@ export class PolicyState implements State
 		this.app.stage.on("pointerupoutside", () => { this.isDragging = false; } );
 
 		this.headerStyle.fontFamily = "terminess";
-		this.headerStyle.fontSize = 28;
+		this.headerStyle.fontSize = 32;
 		this.headerStyle.fill = 0x000000;
 
 		gameData.cards.forEach
@@ -139,7 +137,7 @@ export class PolicyState implements State
 							{
 								event.stopPropagation();
 								this.whichCardToOpenAllocate = card;
-								this.isOpeningAllocate = true;
+								this.isConfirm = true;
 							}
 						);
 					}
@@ -154,11 +152,12 @@ export class PolicyState implements State
 		{
 			return { type: "pop" };
 		}
-		if (this.isOpeningAllocate)
+		if (this.isConfirm)
 		{
-			this.isOpeningAllocate = false;
+			this.isConfirm = false;
 			return {
-				type: "push", state: new AllocateState(this.app, this.whichCardToOpenAllocate)
+				type: "push",
+				state: new ConfirmationState(this.app, "pay", this.whichCardToOpenAllocate)
 			};
 		}
 		return { type: "stay" };
