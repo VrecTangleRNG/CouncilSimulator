@@ -8,6 +8,7 @@ import { State, StateTransition } from "../machine";
 import { currentGamePage, gameData } from "../../global";
 import { Position } from "../../helper";
 import { CardItem } from "../../entities";
+import { AllocateState } from "./allocate";
 
 export class PolicyState implements State
 {
@@ -22,6 +23,9 @@ export class PolicyState implements State
 
 	private isDragging: boolean;
 	private isDoneMove: boolean;
+	private isOpeningAllocate: boolean;
+	private isPaused: boolean;
+	private whichCardToOpenAllocate: CardItem;
 	private startPoint: Position;
 	private startContainer: Position;
 
@@ -53,10 +57,13 @@ export class PolicyState implements State
 			}
 		);
 		this.headerStyle = new TextStyle();
+		this.whichCardToOpenAllocate = new CardItem(0);
 
 		// Back-end variables
 		this.isDragging = false;
 		this.isDoneMove = false;
+		this.isOpeningAllocate = false;
+		this.isPaused = false;
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
 
@@ -125,6 +132,16 @@ export class PolicyState implements State
 						card.container.x = this.lines[0].x;
 						card.container.y = this.lines[i].y + this.lines[i].height +
 							verticalMargin + (verticalMargin + card.card.height) * j;
+
+						card.allocateBtn.on
+						(
+							"pointerdown", (event) =>
+							{
+								event.stopPropagation();
+								this.whichCardToOpenAllocate = card;
+								this.isOpeningAllocate = true;
+							}
+						);
 					}
 				);
 			}
@@ -136,6 +153,13 @@ export class PolicyState implements State
 		if (currentGamePage.state !== this.name)
 		{
 			return { type: "pop" };
+		}
+		if (this.isOpeningAllocate)
+		{
+			this.isOpeningAllocate = false;
+			return {
+				type: "push", state: new AllocateState(this.app, this.whichCardToOpenAllocate)
+			};
 		}
 		return { type: "stay" };
 	}

@@ -38,6 +38,9 @@ export async function load()
 		{ alias: "incomeBtn", src: "assets/textures/incomeBtn.png"},
 		{ alias: "pauseBtn", src: "assets/textures/pauseBtn.png"},
 		{ alias: "allocateBtn", src: "assets/textures/allocateBtn.png"},
+		{ alias: "yesBtn", src: "assets/textures/yesBtn.png"},
+		{ alias: "grayedYesBtn", src: "assets/textures/grayedYesBtn.png"},
+		{ alias: "noBtn", src: "assets/textures/noBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},
@@ -52,6 +55,7 @@ export async function load()
 		{ alias: "pausePanel", src: "assets/textures/pausePanel.png"},
 		{ alias: "settingsPanel", src: "assets/textures/settingsPanel.png"},
 		{ alias: "warningPanel", src: "assets/textures/warningPanel.png"},
+		{ alias: "policyPanel", src: "assets/textures/policyPanel.png"},
 
 		// Fonts
 		{

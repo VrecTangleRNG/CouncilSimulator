@@ -3,7 +3,7 @@ import { State, StateTransition } from "../machine";
 
 import { PolicyState } from "./policy";
 import { IncomeState } from "./income";
-import { currentGamePage } from "../../global";
+import { currentGamePage, gameData } from "../../global";
 
 export class GameplayState implements State
 {
@@ -24,8 +24,6 @@ export class GameplayState implements State
 	private moneyText: BitmapText;
 	private timeText: BitmapText;
 
-	private trustMeter: number;
-	private money: number;
 	private dayRate: number;
 	private daysPassed: number;
 	public incomes: number[];
@@ -51,12 +49,10 @@ export class GameplayState implements State
 		this.moneyText = new BitmapText();
 		this.timeText = new BitmapText();
 
-		this.money = 200.00;
 		this.incomes = [];
 		this.incomes[0] = 15;
 		this.dayRate = 0;
 		this.daysPassed = 0;
-		this.trustMeter = 50;
 
 		this.container.addChild
 		(
@@ -106,7 +102,7 @@ export class GameplayState implements State
 			fontSize: 32,
 			fill: 0x000000
 		};
-		this.moneyText.text = "$" + this.money.toFixed(2) + "M";
+		this.moneyText.text = "$" + gameData.money.toFixed(2) + "M";
 		this.moneyText.anchor.set(0.5);
 		this.moneyText.x = this.textboxes[0].x + this.textboxes[0].width / 2;
 		this.moneyText.y = this.textboxes[0].y + this.textboxes[0].height / 2;
@@ -172,9 +168,9 @@ export class GameplayState implements State
 	public pause(ticker: Ticker)
 	{
 		// Update trust bar
-		this.trustMeter -= ticker.deltaMS / 750;
-		if (this.trustMeter <= 0) this.trustMeter = 0;
-		this.barFilled.scale.x = this.trustMeter / 100;
+		gameData.trust -= ticker.deltaMS / 750;
+		if (gameData.trust <= 0) gameData.trust = 0;
+		this.barFilled.scale.x = gameData.trust / 100;
 
 		// Update HUD
 		this.daysPassed += ticker.deltaMS / 1500;
@@ -183,12 +179,12 @@ export class GameplayState implements State
 		{
 			this.incomes.forEach
 			(
-				(n) => { this.money += n; }
+				(n) => { gameData.money += n; }
 			);
 			this.dayRate = 0;
 			this.timeText.text = this.daysPassed.toFixed(0) + " Days";
-			this.moneyText.text = "$" + this.money.toFixed(2) + "M";
 		}
+		this.moneyText.text = "$" + gameData.money.toFixed(2) + "M";
 
 		return;
 	}
