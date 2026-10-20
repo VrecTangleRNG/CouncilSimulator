@@ -10,6 +10,9 @@ export async function load()
 		{ alias: "checkmark", src: "assets/textures/checkmark.png"},
 		{ alias: "line", src: "assets/textures/line.png"},
 		{ alias: "taskPoint", src: "assets/textures/taskPoint.png"},
+		{ alias: "individualIncomeIcon", src: "assets/textures/individualIncomeIcon.png"},
+		{ alias: "consumptionIcon", src: "assets/textures/consumptionIcon.png"},
+		{ alias: "propertyIcon", src: "assets/textures/propertyIcon.png"},
 
 		// Difficulties
 		{ alias: "policyHeader", src: "assets/textures/diffSelectHeader.png"},
@@ -41,6 +44,7 @@ export async function load()
 		{ alias: "yesBtn", src: "assets/textures/yesBtn.png"},
 		{ alias: "grayedYesBtn", src: "assets/textures/grayedYesBtn.png"},
 		{ alias: "noBtn", src: "assets/textures/noBtn.png"},
+		{ alias: "raiseTaxesBtn", src: "assets/textures/raiseTaxesBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},
