@@ -13,6 +13,7 @@ export async function load()
 		{ alias: "individualIncomeIcon", src: "assets/textures/individualIncomeIcon.png"},
 		{ alias: "consumptionIcon", src: "assets/textures/consumptionIcon.png"},
 		{ alias: "propertyIcon", src: "assets/textures/propertyIcon.png"},
+		{ alias: "demotedScreen", src: "assets/textures/demotedScreen.png"},
 
 		// Difficulties
 		{ alias: "policyHeader", src: "assets/textures/diffSelectHeader.png"},
@@ -47,6 +48,7 @@ export async function load()
 		{ alias: "raiseTaxesBtn", src: "assets/textures/raiseTaxesBtn.png"},
 		{ alias: "smallContinueBtn", src: "assets/textures/smallContinueBtn.png"},
 		{ alias: "smallDownBtn", src: "assets/textures/smallDownBtn.png"},
+		{ alias: "backBtn", src: "assets/textures/backBtn.png"},
 
 		// HUD
 		{ alias: "playHUD", src: "assets/textures/playHUD.png"},

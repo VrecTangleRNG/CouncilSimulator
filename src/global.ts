@@ -4,7 +4,8 @@ type GameData =
 	progress: number[][],
 	incomes: number[],
 	money: number,
-	trust: number
+	trust: number,
+	days: number
 };
 export let gameData: GameData =
 {
@@ -13,6 +14,7 @@ export let gameData: GameData =
 	incomes: [15.50, 0, 0],
 	money: 200.00,
 	trust: 50,
+	days: 0
 };
 
 type GameplayPage = { state: "policy" | "income" };

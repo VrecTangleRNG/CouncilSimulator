@@ -4,6 +4,7 @@ import { StateMachine } from "./state/machine";
 import * as assets from "./assets";
 
 import { TitleScreenState } from "./state/list/titleScreen";
+import { GameoverState } from "./state/list/gameover";
 
 async function main(): Promise<void>
 {
@@ -20,7 +21,7 @@ async function main(): Promise<void>
 	document.body.appendChild(app.canvas);
 	app.stage.sortableChildren = true;
 	await assets.load();
-	const stateMachine: StateMachine = new StateMachine(new TitleScreenState(app));
+	const stateMachine: StateMachine = new StateMachine(new GameoverState(app));
 
 	// Game loop
 	app.ticker.add

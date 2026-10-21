@@ -80,6 +80,10 @@ export class GameplayState implements State
 			0, this.playHUD.height / 2,
 			this.app.screen.width, this.app.screen.height - this.playHUD.height / 2
 		);
+		this.app.stage.on
+		(
+			"resume", () => { this.isPaused = false; }
+		);
 
 		this.container.zIndex = 1;
 
@@ -175,7 +179,6 @@ export class GameplayState implements State
 
 	public pause(ticker: Ticker)
 	{
-		// TODO: find a way to unpause this
 		if (this.isPaused) return;
 
 		// Update trust bar

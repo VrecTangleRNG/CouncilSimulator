@@ -1,5 +1,6 @@
 import { Application, Container, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
+import { WarningState } from "./warning";
 
 export class PausedState implements State
 {
@@ -64,7 +65,16 @@ export class PausedState implements State
 
 	public update(ticker: Ticker): StateTransition
 	{
-		if (this.isExit) return { type: "pop" };
+		if (this.isExit)
+		{
+			this.app.stage.emit("resume");
+			return { type: "pop" };
+		}
+		if (this.isWarning)
+		{
+			this.isWarning = false;
+			return { type: "push", state: new WarningState(this.app) };
+		}
 		return { type: "stay" };
 	}
 
