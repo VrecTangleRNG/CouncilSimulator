@@ -4,7 +4,7 @@ import { State, StateTransition } from "../machine";
 import { PolicyState } from "./policy";
 import { IncomeState } from "./income";
 import { currentGamePage, gameData } from "../../global";
-import { PausedState } from "./pause";
+import { GameoverState } from "./gameover";
 
 export class GameplayState implements State
 {
@@ -26,8 +26,8 @@ export class GameplayState implements State
 	private timeText: BitmapText;
 
 	private isPaused: boolean;
+	private isGameover: boolean;
 	private dayRate: number;
-	private daysPassed: number;
 
 	constructor(app: Application)
 	{
@@ -51,8 +51,8 @@ export class GameplayState implements State
 		this.timeText = new BitmapText();
 
 		this.isPaused = false;
+		this.isGameover = false;
 		this.dayRate = 0;
-		this.daysPassed = 0;
 
 		this.container.addChild
 		(
@@ -84,6 +84,10 @@ export class GameplayState implements State
 		(
 			"resume", () => { this.isPaused = false; }
 		);
+		this.app.stage.on
+		(
+			"gameover", () => { this.isGameover = true; }
+		);
 
 		this.container.zIndex = 1;
 
@@ -112,7 +116,7 @@ export class GameplayState implements State
 		this.moneyText.y = this.textboxes[0].y + this.textboxes[0].height / 2;
 
 		this.timeText.style = this.moneyText.style;
-		this.timeText.text = this.daysPassed + " Days";
+		this.timeText.text = gameData.days + " Days";
 		this.timeText.anchor.set(0.5);
 		this.timeText.x = this.textboxes[1].x + this.textboxes[1].width / 2;
 		this.timeText.y = this.textboxes[1].y + this.textboxes[1].height / 2;
@@ -174,6 +178,11 @@ export class GameplayState implements State
 			this.policyBtn.tint = 0xffffff;
 			return { type: "push", state: new IncomeState(this.app, this.pauseBtn) };
 		}
+		// TODO: exit game
+		if (this.isGameover)
+		{
+			return { type: "replace", state: new GameoverState(this.app) };
+		}
 		return { type: "stay" };
 	}
 
@@ -182,12 +191,12 @@ export class GameplayState implements State
 		if (this.isPaused) return;
 
 		// Update trust bar
-		gameData.trust -= ticker.deltaMS / 750;
-		if (gameData.trust <= 0) gameData.trust = 0;
+		gameData.trust -= ticker.deltaMS / 1;
+		if (gameData.trust <= 0) this.app.stage.emit("gameover");
 		this.barFilled.scale.x = gameData.trust / 100;
 
 		// Update HUD
-		this.daysPassed += ticker.deltaMS / 1500;
+		gameData.days += ticker.deltaMS / 1500;
 		this.dayRate += ticker.deltaMS / 1500;
 		if (this.dayRate >= 1)
 		{
@@ -196,7 +205,7 @@ export class GameplayState implements State
 				(n) => { gameData.money += n; }
 			);
 			this.dayRate = 0;
-			this.timeText.text = this.daysPassed.toFixed(0) + " Days";
+			this.timeText.text = gameData.days.toFixed(0) + " Days";
 		}
 		this.moneyText.text = "$" + gameData.money.toFixed(2) + "M";
 
