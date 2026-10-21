@@ -17,5 +17,18 @@ export let gameData: GameData =
 	days: 0
 };
 
+export function resetGameData()
+{
+	gameData =
+	{
+		cards: [],
+		progress: [[]],
+		incomes: [15.50, 0, 0],
+		money: 200.00,
+		trust: 50,
+		days: 0
+	};
+}
+
 type GameplayPage = { state: "policy" | "income" };
 export let currentGamePage: GameplayPage = { state: "policy" };

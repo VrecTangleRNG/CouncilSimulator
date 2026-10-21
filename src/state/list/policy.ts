@@ -31,6 +31,7 @@ export class PolicyState implements State
 	private startPoint: Position;
 	private startContainer: Position;
 	private isPaused: boolean;
+	private isOver: boolean;
 
 	constructor(app: Application, pauseBtn: Sprite)
 	{
@@ -71,6 +72,7 @@ export class PolicyState implements State
 		this.startPoint = { x: 0, y: 0 };
 		this.startContainer = { x: 0, y: 0 };
 		this.isPaused = false;
+		this.isOver = false;
 
 		// Add objects to stage
 		this.lines.forEach( (sprite) => { this.container.addChild(sprite); } );
@@ -113,6 +115,7 @@ export class PolicyState implements State
 		);
 		this.app.stage.on("pointerup", () => { this.isDragging = false; } );
 		this.app.stage.on("pointerupoutside", () => { this.isDragging = false; } );
+		this.app.stage.on("gameover", () => { this.isOver = true; } );
 
 		this.headerStyle.fontFamily = "terminess";
 		this.headerStyle.fontSize = 32;
@@ -162,6 +165,10 @@ export class PolicyState implements State
 	public update(ticker: Ticker): StateTransition
 	{
 		this.canScrolling = true;
+		if (this.isOver)
+		{
+			return { type: "pop" };
+		}
 		if (this.isPaused)
 		{
 			this.isPaused = false;

@@ -23,6 +23,7 @@ export class IncomeState implements State
 
 	private isConfirm: boolean;
 	private isPaused: boolean;
+	private isOver: boolean;
 
 	constructor(app: Application, pauseBtn: Sprite)
 	{
@@ -48,6 +49,7 @@ export class IncomeState implements State
 
 		this.isConfirm = false;
 		this.isPaused = false;
+		this.isOver = false;
 
 		this.container.addChild
 		(
@@ -64,6 +66,7 @@ export class IncomeState implements State
 	{
 		const verticalMargin = 10;
 		const HUDHeight = 152;
+		this.app.stage.on("gameover", () => { this.isOver = true; } );
 
 		this.headerText.style.fontFamily = "terminess";
 		this.headerText.style.fontSize = 32;
@@ -135,6 +138,10 @@ export class IncomeState implements State
 		);	
 
 		// State transitions
+		if (this.isOver)
+		{
+			return { type: "pop" };
+		}
 		if (this.isPaused)
 		{
 			this.isPaused = false;

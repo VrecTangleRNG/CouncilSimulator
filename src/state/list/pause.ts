@@ -14,6 +14,7 @@ export class PausedState implements State
 
 	private isExit: boolean;
 	private isWarning: boolean;
+	private isOver: boolean;
 
 	constructor(app: Application)
 	{
@@ -27,6 +28,7 @@ export class PausedState implements State
 
 		this.isExit = false;
 		this.isWarning = false;
+		this.isOver = false;
 
 		this.container.addChild
 		(
@@ -39,6 +41,7 @@ export class PausedState implements State
 	public enter()
 	{
 		this.container.zIndex = 2;
+		this.app.stage.on("gameover", () => { this.isOver = true; } );
 
 		this.panel.x = (this.app.screen.width - this.panel.width) / 2;
 		this.panel.y = (this.app.screen.height - this.panel.height) / 2;
@@ -65,6 +68,10 @@ export class PausedState implements State
 
 	public update(ticker: Ticker): StateTransition
 	{
+		if (this.isOver)
+		{
+			return { type: "pop" };
+		}
 		if (this.isExit)
 		{
 			this.app.stage.emit("resume");

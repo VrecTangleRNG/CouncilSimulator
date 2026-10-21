@@ -166,6 +166,10 @@ export class GameplayState implements State
 	public update(ticker: Ticker): StateTransition
 	{
 		// State Transitions
+		if (this.isGameover)
+		{
+			return { type: "replace", state: new GameoverState(this.app) };
+		}
 		if (currentGamePage.state === "policy")
 		{
 			this.policyBtn.tint = 0x888888;
@@ -178,11 +182,6 @@ export class GameplayState implements State
 			this.policyBtn.tint = 0xffffff;
 			return { type: "push", state: new IncomeState(this.app, this.pauseBtn) };
 		}
-		// TODO: exit game
-		if (this.isGameover)
-		{
-			return { type: "replace", state: new GameoverState(this.app) };
-		}
 		return { type: "stay" };
 	}
 
@@ -191,7 +190,7 @@ export class GameplayState implements State
 		if (this.isPaused) return;
 
 		// Update trust bar
-		gameData.trust -= ticker.deltaMS / 1;
+		gameData.trust -= ticker.deltaMS / 750;
 		if (gameData.trust <= 0) this.app.stage.emit("gameover");
 		this.barFilled.scale.x = gameData.trust / 100;
 

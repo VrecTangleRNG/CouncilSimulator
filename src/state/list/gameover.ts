@@ -65,7 +65,7 @@ export class GameoverState implements State
 		this.daysText.style.fontFamily = "terminess";
 		this.daysText.style.fontSize = 64;
 		this.daysText.style.fill = 0x000000;
-		this.daysText.text = gameData.days + " DAYS";
+		this.daysText.text = gameData.days.toFixed(0) + " DAYS";
 		this.daysText.x = (this.app.screen.width - this.daysText.width) / 2;
 		this.daysText.y = (this.app.screen.height - this.daysText.height) / 2;
 

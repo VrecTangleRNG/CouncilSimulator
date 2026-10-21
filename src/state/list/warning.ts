@@ -14,6 +14,7 @@ export class WarningState implements State
 
 	private isCancel: boolean;
 	private isQuit: boolean;
+	private isOver: boolean;
 
 	constructor(app: Application)
 	{
@@ -28,6 +29,7 @@ export class WarningState implements State
 
 		this.isCancel = false;
 		this.isQuit = false;
+		this.isOver = false;
 
 		this.container.addChild
 		(
@@ -40,6 +42,8 @@ export class WarningState implements State
 
 	public enter()
 	{
+		this.app.stage.on("gameover", () => { this.isOver = true; } );
+
 		this.container.zIndex = 3;
 
 		this.panel.x = (this.app.screen.width - this.panel.width) / 2;
@@ -63,7 +67,7 @@ export class WarningState implements State
 		this.yesBtn.cursor = "pointer";
 		this.yesBtn.on
 		(
-			"pointerdown", () => { this.isQuit = true; }
+			"pointerdown", () => { this.app.stage.emit("gameover"); }
 		);
 
 		this.noBtn.x = this.text.x + this.text.width - this.noBtn.width - margin;
@@ -83,7 +87,7 @@ export class WarningState implements State
 			this.isCancel = false;
 			return { type: "pop" };
 		}
-		if (this.isQuit)
+		if (this.isQuit || this.isOver)
 		{
 			return { type: "pop" };
 		}

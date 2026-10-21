@@ -21,7 +21,7 @@ async function main(): Promise<void>
 	document.body.appendChild(app.canvas);
 	app.stage.sortableChildren = true;
 	await assets.load();
-	const stateMachine: StateMachine = new StateMachine(new GameoverState(app));
+	const stateMachine: StateMachine = new StateMachine(new TitleScreenState(app));
 
 	// Game loop
 	app.ticker.add

@@ -2,6 +2,7 @@ import { Application, Container, Sprite, Ticker } from "pixi.js";
 import { State, StateTransition } from "../machine";
 
 import { LevelSelectionState } from "./levelSelect";
+import { resetGameData } from "../../global";
 
 export class TitleScreenState implements State
 {
@@ -38,6 +39,9 @@ export class TitleScreenState implements State
 	public enter()
 	{
 		let titleMargin = (this.app.screen.width - this.title.width) / 2;
+
+		resetGameData();
+
 		this.title.position.set(titleMargin);
 
 		this.quitBtn.x = (this.app.screen.width - this.quitBtn.width) / 2;
