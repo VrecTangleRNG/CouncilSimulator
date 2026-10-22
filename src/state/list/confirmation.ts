@@ -94,7 +94,8 @@ export class ConfirmationState implements State
 					(
 						(tax) => {totalTax += tax}
 					);
-					gameData.trust -= totalTax / 5;
+					gameData.trust -= 10;
+					gameData.trustRate += 0.13;
 					this.isExit = true;
 				}
 			}

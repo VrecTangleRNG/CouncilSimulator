@@ -190,8 +190,9 @@ export class GameplayState implements State
 		if (this.isPaused) return;
 
 		// Update trust bar
-		gameData.trust -= ticker.deltaMS / 750;
+		gameData.trust -= ticker.deltaMS / 1000 * gameData.trustRate;
 		if (gameData.trust <= 0) this.app.stage.emit("gameover");
+		else if (gameData.trust >= 100) gameData.trust = 100;
 		this.barFilled.scale.x = gameData.trust / 100;
 
 		// Update HUD
@@ -203,8 +204,8 @@ export class GameplayState implements State
 			(
 				(n) => { gameData.money += n; }
 			);
-			this.dayRate = 0;
 			this.timeText.text = gameData.days.toFixed(0) + " Days";
+			this.dayRate = 0;
 		}
 		this.moneyText.text = "$" + gameData.money.toFixed(2) + "M";
 
